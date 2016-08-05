@@ -1,6 +1,9 @@
 #!/bin/bash
 set -e
 
+# Configure Git repository connection choice between Gerrit and Gitlab
+source /resources/scripts/git_repo_connection.sh
+
 cp -R /resources/configuration/* /etc/nginx/
 cp -R /resources/release_note/* /usr/share/nginx/html/
 
@@ -15,7 +18,9 @@ perl -p -i -e 's/###([^#]+)###/defined $ENV{$1} ? $ENV{$1} : $&/eg' < "/template
 # the depends_on see https://github.com/docker/compose/pull/686 and https://github.com/docker/compose/issues/2682 is introduced
 # on docker compose
 SLEEP_TIME=2
-declare -a DEPENDENCIES=( "kibana:5601" "gerrit:8080/gerrit" "jenkins:8080" "sonar:9000" "sensu-uchiwa:3000" "nexus:8081" )
+
+declare -a DEPENDENCIES=( "kibana:5601" "jenkins:8080" "sonar:9000" "sensu-uchiwa:3000" "nexus:8081" "$GIT_URL")
+
 for d in ${DEPENDENCIES[@]}; do 
   echo "waiting for $d to be available";
   # use wget as already installed... 

@@ -3,6 +3,7 @@ FROM ubuntu:14.04
 MAINTAINER Robert Northard, <robert.a.northard>
 
 ENV NGINX_VERSION 1.8.0
+ENV GIT_REPO gerrit
 
 ############## nginx setup ##############
 
